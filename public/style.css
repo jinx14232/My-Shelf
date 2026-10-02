@@ -1,0 +1,257 @@
+/* folklore — book companion app
+   Shared styles for the sign-in and register screens */
+
+:root {
+  --cream: #f6f2ea;
+  --cream-panel: #f6f2ea;
+  --ink: #2a2a24;
+  --forest: #2f4736;
+  --forest-dark: #24382b;
+  --line: #ddd6c7;
+  --muted: #8a8578;
+  --field-bg: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--ink);
+  background: var(--cream);
+}
+
+.auth-shell {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  min-height: 100vh;
+}
+
+/* ---------- Left: photo panel ---------- */
+
+.auth-visual {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  padding: 2.5rem 2.75rem;
+  color: #fff;
+  overflow: hidden;
+}
+
+.auth-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20, 18, 12, 0.15) 0%, rgba(20, 18, 12, 0.1) 45%, rgba(20, 18, 12, 0.55) 100%);
+  pointer-events: none;
+}
+
+
+.auth-quote {
+
+  position: relative;
+  z-index: 1;
+  max-width: 26rem;
+}
+
+.auth-quote p {
+  font-family: "Source Serif Pro", Georgia, "Times New Roman", serif;
+  font-size: 1.75rem;
+  line-height: 1.32;
+  margin: 0 0 1rem;
+}
+
+.auth-quote cite {
+  font-style: normal;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.auth-quote cite::before {
+  content: "— ";
+}
+
+/* ---------- Right: form panel ---------- */
+
+.auth-form-panel {
+  background: var(--cream-panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem;
+}
+
+.auth-form {
+  width: 100%;
+  max-width: 22rem;
+}
+
+.auth-form h1 {
+  font-family: "Source Serif Pro", Georgia, "Times New Roman", serif;
+  font-weight: 500;
+  font-size: 2rem;
+  margin: 0 0 0.4rem;
+}
+
+.auth-form > p.lede {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin: 0 0 2rem;
+}
+.warning{
+  display: block;
+  font-family: "Source Serif Pro", Georgia, "Times New Roman", serif;
+  color: rgba(175, 2, 2, 0.728);
+}
+.warning-hide{
+  display: none;
+}
+
+.field {
+  margin-bottom: 1.15rem;
+}
+
+.field label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.field-input {
+  position: relative;
+}
+
+.field input {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--field-bg);
+  font-size: 0.95rem;
+  color: var(--ink);
+  font-family: inherit;
+}
+
+.field input:focus {
+  outline: 2px solid var(--forest);
+  outline-offset: 1px;
+  border-color: var(--forest);
+}
+
+.field input::placeholder {
+  color: #b9b3a2;
+}
+
+.field-input .toggle-visibility {
+  position: absolute;
+  right: 0.7rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+  padding: 0.2rem;
+}
+
+.field-input .toggle-visibility svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* .row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0.2rem 0 1.6rem;
+  font-size: 0.88rem;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--ink);
+}
+
+.remember input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--forest);
+}
+
+.link {
+  color: var(--forest-dark);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+} */
+
+/* .terms {
+  font-size: 0.85rem;
+  color: var(--ink);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  margin: 0.3rem 0 1.6rem;
+} */
+
+/* .terms input[type="checkbox"] {
+  margin-top: 0.2rem;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--forest);
+  flex-shrink: 0;
+} */
+
+.btn-primary {
+  width: 100%;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--forest);
+  color: #fff;
+  font-size: 0.98rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-primary:hover {
+  background: var(--forest-dark);
+}
+
+.switch-line {
+  text-align: center;
+  margin-top: 1.4rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.switch-line a {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (max-width: 860px) {
+  .auth-shell {
+    grid-template-columns: 1fr;
+  }
+  .auth-visual {
+    min-height: 260px;
+  }
+}

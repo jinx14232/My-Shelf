@@ -1,0 +1,18 @@
+{
+  "name": "read-manager",
+  "version": "1.0.0",
+  "description": "This is an application to manage your reading records",
+  "license": "ISC",
+  "author": "Hassan Alam",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch --env-file=.env --experimental-strip-types --experimental-sqlite ./src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3"
+  }
+}

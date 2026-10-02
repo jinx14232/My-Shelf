@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>folklore — Register</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="auth-shell">
+      <section
+        class="auth-visual"
+        style="background-image: url(&quot;/Assets/register_img.avif&quot;)"
+      >
+        <figure class="auth-quote">
+          <p>&ldquo;Books are a uniquely portable magic.&rdquo;</p>
+          <cite>Stephen King</cite>
+        </figure>
+      </section>
+
+      <section class="auth-form-panel">
+        <form class="auth-form" autocomplete="off" data-endpoint="auth/register">
+          <h1>Create your account</h1>
+          <p class="lede">
+            Begin cataloging your reading journey with beautiful details.
+          </p>
+
+          <div class="field">
+            <label for="name">Full Name <span id="name-warning" class="warning-hide">Invalid name</span></label>
+            <div class="field-input">
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="e.g. Hassan Alam"
+              />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="email">Email Address <span id="email-warning" class="warning-hide">Invalid email</span></label>
+            <div class="field-input">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="e.g. hassanAlam@gmail.com"
+              />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+            <div class="field-input">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Create a secure password"
+              />
+              <button
+                type="button"
+                class="toggle-visibility"
+                aria-label="Show password"
+                onclick="togglePassword('password', this)"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                >
+                  <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <p id="login-err" class="warning-hide">User not found</p>
+          <button type="submit" class="btn-primary">Register Library</button>
+
+          <p class="switch-line">
+            Already have an account? <a href="index.html">Sign In</a>
+          </p>
+        </form>
+      </section>
+    </div>
+
+    
+    <script src="app.js"></script>
+  </body>
+</html>

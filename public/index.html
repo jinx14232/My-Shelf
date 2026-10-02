@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>folklore — Sign in</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="auth-shell">
+      <section
+        class="auth-visual"
+        style="background-image: url(&quot;/Assets/Login_img.avif&quot;)"
+      >
+        <figure class="auth-quote">
+          <p>
+            &ldquo;A room without books is like a body without a soul.&rdquo;
+          </p>
+          <cite>Marcus Tullius Cicero</cite>
+        </figure>
+      </section>
+
+      <section class="auth-form-panel">
+        <form class="auth-form" autocomplete="off" data-endpoint="auth/login">
+          <h1>Welcome back</h1>
+          <p class="lede">
+            Please enter your credentials to open your personal library.
+          </p>
+
+          <div class="field">
+            <label for="email">Email Address <span id="email-warning" class="warning-hide">Invalid email</span></label>
+            <div class="field-input">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="hassanAlam@gmail.com"
+              />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="password">Password <span id="pass-warning" class="warning-hide">Incorrect password</span></label>
+            <div class="field-input">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="secretreader"
+              />
+              <button
+                type="button"
+                class="toggle-visibility"
+                aria-label="Show password"
+                onclick="togglePassword('password', this)"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                >
+                  <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <p id="login-err" class="warning-hide">User not found</p>
+          <button type="submit" class="btn-primary" >
+            Sign In
+          </button>
+
+          <p class="switch-line">
+            Don't have an account? <a href="register.html">Register now</a>
+          </p>
+        </form>
+      </section>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
