@@ -1,5 +1,6 @@
 import express from 'express'
 import db from '../db.js'
+import prisma from '../prismaClient.js'
 
 const router = express.Router()
 
@@ -7,12 +8,12 @@ const router = express.Router()
 router.post('/add', async(req, res)=>{
 
     const {books} = req.body;
-    const ids = []
+    const createdBooks = []
 
-    const insertBook = db.prepare(`
-        INSERT INTO books (title, author, cover_url, category, rating, desc)
-        VALUES (?, ?, ?, ?, ?, ?)
-    `);
+    // const insertBook = db.prepare(`
+    //     INSERT INTO books (title, author, cover_url, category, rating, desc)
+    //     VALUES (?, ?, ?, ?, ?, ?)
+    // `);
 
     for(const book of books) {
         
@@ -23,12 +24,22 @@ router.post('/add', async(req, res)=>{
             : null;
         const {category, desc} = await getMoreInfo(book.key)
 
-        const bookInfo = insertBook.run(title, author, coverUrl, category, (Math.random() *2 + 3).toFixed(1), desc);
-        ids.push(bookInfo.lastInsertRowid)
+        //const bookInfo = insertBook.run(title, author, coverUrl, category, (Math.random() *2 + 3).toFixed(1), desc);
+        const createdBook = await prisma.book.create({
+            data: {
+                title: title,
+                author: author,
+                cover_url: coverUrl,
+                category: category,
+                rating: (Math.random() * 2 + 3).toFixed(1),
+                desc: desc
+            }
+        })
+        createdBooks.push(createdBook)
 
     };
 
-    res.json(ids)
+    res.json(createdBooks)
 })
 
 async function getMoreInfo(key) {
@@ -48,53 +59,69 @@ async function getMoreInfo(key) {
     }
 }
 
-router.delete('/:id', (req, res)=>{
+router.delete('/:id', async (req, res)=>{
     const { id } = req.params;
 
-    const result = db.prepare(`
-        DELETE FROM user_books
-        WHERE id = ?
-    `).run(id);
+    // const result = db.prepare(`
+    //     DELETE FROM user_books
+    //     WHERE id = ?
+    // `).run(id);
+    const result = await prisma.userBook.delete({
+        where: {
+            id: Number(id)
+        }
+    });
 
     res.json({
-        deleted: result.changes > 0
+        deleted: !!result
     });
 })
 
-router.patch('/:id', (req, res)=>{
+router.patch('/:id', async (req, res)=>{
     
     const { id } = req.params;
     const {status} = req.body;
 
-    const result = db.prepare(`
-        UPDATE user_books
-         status = ?
-        WHERE id = ? 
-    `).run(status, id);
+    const result = await prisma.userBook.update({
+        where: {
+            id: Number(id)
+        },
+        data: {
+            status: status
+        }
+    });
 
     res.json({
-        deleted: result.changes > 0
+        updated: !!result
     });
 })
 
-router.post('/', (req, res)=>{
+router.post('/', async (req, res)=>{
 
     const {status, book_id} = req.body
 
-     const insertBook = db.prepare(`
-        INSERT INTO user_books (user_id, book_id, status)
-        VALUES (?, ?, ?)
-    `).run(req.user.id, book_id, status)
+    const createdBook = await prisma.userBook.create({
+        data: {
+            user_id: req.user.id,
+            book_id: book_id,
+            status: status
+        }
+    });
 
     res.json({message: 'book added'})
 
 })
 
-router.get('/', (req, res)=>{
+router.get('/', async (req, res)=>{
 
-     const userBooks = db.prepare(`
-        SELECT * FROM user_books WHERE user_id = ?
-    `).all(req.user.id)
+    //  const userBooks = db.prepare(`
+    //     SELECT * FROM user_books WHERE user_id = ?
+    // `).all(req.user.id)
+    const userBooks = await prisma.userBook.findMany({
+        where: {
+            user_id: req.user.id
+        }
+    })
 
     res.json(userBooks)
 

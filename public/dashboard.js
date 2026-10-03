@@ -46,19 +46,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       if(books!= null){
         console.log('found online, cheking if any exists in datbase, sending ', books.docs)
 
-        const {newBooks, existingBooks} = CheckBooksInDatabase(books.docs)
+        const {newBooksData, existingBooks} = CheckBooksInDatabase(books.docs)
         
         //add new books to database, existing books are render ready
         if(newBooks.length > 0){
-          console.log('found new books to add ', newBooks)
+          console.log('found new books to add ', newBooksData)
 
-          const newBookIds = await AddNewBooks(newBooks)
+          const newBooks = await AddNewBooks(newBooksData)
 
           //refresh books array
           await loadDatabaseBooks()
 
           //get new news data from array to render with existing books
-          GetBooksById(newBookIds).forEach(book => existingBooks.push(book))
+          newBooks.forEach(book => existingBooks.push(book))
 
           renderTabBar();
           renderPanel();
@@ -94,7 +94,7 @@ function GetBooksById(ids){
 async function AddNewBooks(books) {
 
   //to hold ids of new books in database
-  let boodIds = []
+  let newBooks = []
 
   console.log('adding new books')
   try {
@@ -111,15 +111,15 @@ async function AddNewBooks(books) {
       throw Error('canot add books to database')
 
     //get ids of new inseted books
-    boodIds = await responce.json()
+    newBooks = await responce.json()
 
   }
   catch (err) {
     console.log('cannot add book')
     throw Error(err)
   }
-  console.log('new added books ids ', boodIds)
-  return boodIds
+  console.log('new added books ', newBooks)
+  return newBooks
 }
 function CheckBooksInDatabase(onlineBooks) {
 

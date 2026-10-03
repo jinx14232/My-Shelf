@@ -2,19 +2,25 @@ import express from 'express'
 import jwt from 'jsonwebtoken'
 import db  from '../db.js';
 import bcrypt from 'bcryptjs'
+import prisma from '../prismaClient.js'
 
 const router = express.Router();
 
-router.post('/register', (req, res)=>{
+router.post('/register', async (req, res)=>{
 
     //req.body has required credentials
     const {name, email, password} = req.body
 
     //check if user already exists
     try{
-        const user = db.prepare(`
-            SELECT * FROM users WHERE email = ?
-        `).get(email)
+        // const user = db.prepare(`
+        //     SELECT * FROM users WHERE email = ?
+        // `).get(email)
+        const user = await prisma.user.findUnique({
+            where: {
+                email: email
+            }
+        })
 
         if(user){
             //user found
@@ -50,10 +56,18 @@ router.post('/register', (req, res)=>{
 
     try{
         const hashedPassword = bcrypt.hashSync(password, 10);
-        const insertUser = db.prepare(`INSERT INTO users (email, name, password) VALUES (?, ?, ?)`)
-        const result = insertUser.run(email, name, hashedPassword)
 
-        const token = jwt.sign({id : result.lastInsertRowid}, process.env.JWT_SECRET, {expiresIn: '24h'})
+        // const insertUser = db.prepare(`INSERT INTO users (email, name, password) VALUES (?, ?, ?)`)
+        // const result = insertUser.run(email, name, hashedPassword)
+        const user = await prisma.user.create({
+            data: {
+                email: email,
+                name: name,
+                password: hashedPassword
+            }
+        })
+
+        const token = jwt.sign({id : user.id}, process.env.JWT_SECRET, {expiresIn: '24h'})
         res.json({token})
 
     }
@@ -65,14 +79,19 @@ router.post('/register', (req, res)=>{
 
 })
 
-router.post('/login', (req, res)=>{
+router.post('/login', async (req, res)=>{
 
     const {email, password} = req.body;
 
     try{
 
-        const getUser = db.prepare(`SELECT * FROM users WHERE email = ?`)
-        const user = getUser.get(email)
+        // const getUser = db.prepare(`SELECT * FROM users WHERE email = ?`)
+        // const user = getUser.get(email)
+        const user = await prisma.user.findUnique({
+            where: {
+                email: email
+            }
+        })
 
         if(!user)
             return res.status(404).send({message: "user not found"})
