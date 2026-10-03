@@ -1,6 +1,7 @@
 import express from 'express'
 import jwt from 'jsonwebtoken'
 import db  from '../db.js';
+import bcrypt from 'bcryptjs'
 
 const router = express.Router();
 
@@ -17,7 +18,7 @@ router.post('/register', (req, res)=>{
 
         if(user){
             //user found
-            if (user.password !== password || user.name != name) {
+            if (!bcrypt.compareSync(password, user.password) || user.name != name) {
                 return res.status(401).json({
                     message: 'email already in use'
                 });
@@ -35,7 +36,7 @@ router.post('/register', (req, res)=>{
             });
         }
 
-        //user not found 
+        //user not found, new register
 
     }
     catch(err)
@@ -48,9 +49,9 @@ router.post('/register', (req, res)=>{
     console.log('new registration')
 
     try{
-
+        const hashedPassword = bcrypt.hashSync(password, 10);
         const insertUser = db.prepare(`INSERT INTO users (email, name, password) VALUES (?, ?, ?)`)
-        const result = insertUser.run(email, name, password)
+        const result = insertUser.run(email, name, hashedPassword)
 
         const token = jwt.sign({id : result.lastInsertRowid}, process.env.JWT_SECRET, {expiresIn: '24h'})
         res.json({token})
@@ -76,7 +77,7 @@ router.post('/login', (req, res)=>{
         if(!user)
             return res.status(404).send({message: "user not found"})
 
-        const isPasswordValid = user.password == password
+        const isPasswordValid = bcrypt.compareSync(password, user.password)
 
 
         if(!isPasswordValid) 

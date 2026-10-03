@@ -47,35 +47,6 @@ async function getMoreInfo(key) {
         console.log(err)
     }
 }
-router.post('/check', (req, res)=>{
-    
-    const {title, author} = req.body
-
-    const reqBook = db.prepare(
-        `SELECT * FROM books WHERE title = ? AND author = ?`
-    ).all(title, author)
-
-    if(reqBook != null)
-        res.json(reqBook[0].id)
-    else
-        res.json(null)
-
-})
-
-router.post('/search', (req, res)=>{
-    
-    const {title} = req.body
-
-    const reqBook = db.prepare(
-        `SELECT * FROM books WHERE title = ? `
-    ).all(title)
-
-    if(reqBook != null)
-        res.json(reqBook)
-    else
-        res.json(null)
-
-})
 
 router.delete('/:id', (req, res)=>{
     const { id } = req.params;
