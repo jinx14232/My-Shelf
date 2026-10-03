@@ -1,9 +1,18 @@
 
 let token;
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
-  let inputs = document.querySelectorAll('.input')
+  await (async () => {
 
+  await loadUser();
+  await loadBooks();
+  renderTabBar();
+  renderPanel();
+
+  })();
+
+  let inputs = document.querySelectorAll('input')
+  console.log('inputs ', inputs)
   for (const bar of inputs) {
       
     
@@ -22,10 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
       let books = SearchTitleInDatabase(bar.value.toLowerCase())
 
       //return if found
-      if (books){
+      if (books.length > 0) {
         //it has book data
         console.log('found in database. ', books)
-        renderSearchPanel('found', [books])
+        renderSearchPanel('found', bar.value, books)
         return;
       };
 
@@ -55,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
           renderPanel();
         }
 
-        renderSearchPanel('found', existingBooks)
+        renderSearchPanel('found', bar.value, existingBooks)
       }
       else{
         console.log('cannot found online')
@@ -65,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
   }
+
 
 })
 
@@ -130,45 +140,6 @@ function CheckBooksInDatabase(onlineBooks) {
       newBooks.push(onlineBook)
 
   })
-  // try{
-    
-  //   for(const book of books){
-
-  //     const responce = await fetch('/books/check', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Authorization': localStorage.getItem('token'),
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         title: book.title.toLowerCase(),
-  //         author: book.author_name?.[0] || 'Unknown'
-  //       })
-  //     })
-
-  //     if (!responce.ok){
-  //       console.log('error finding in database, responce.ok for ', book)
-  //       continue;
-  //     }
-
-  //     //return id of book if found, otherwise null
-  //     const id = await responce.json()
-
-  //     if(id ==  null){
-  //       //cannot find in database, add in database
-  //       newBooks.push(book)
-  //     }else{
-  //       //add id for latter use
-  //       boodIds.push(id)
-  //     }
-
-  //   }
-
-  // }
-  // catch(err){
-  //   console.log('err checking in database ', err)
-  //   throw Error(err)
-  // }
 
   console.log('new books ', newBooks, ' exixting book ', existingBooks)
   return {newBooks: newBooks, existingBooks: existingBooks};
@@ -178,39 +149,15 @@ function CheckBooksInDatabase(onlineBooks) {
 function SearchTitleInDatabase(title) {
   console.log('searching title in database')
 
-  const reqBook = books.find(book=> book.title == title)
+  const reqBook = []
+
+  books.forEach(book=> {
+    if(book.title == title || book.title.includes(title))
+      reqBook.push(book)
+  })
+
   return reqBook;
 
-  // try {
-
-  //   const responce = await fetch('/books/search', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Authorization': localStorage.getItem('token'),
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({title})
-  //   })
-
-  //   if (!responce.ok){
-  //     console.log('error finding in database, responce.ok')
-  //     return null;
-  //   }
-
-  //   const book = await responce.json();
-
-  //   if (!book || book.length <= 0){
-  //     console.log('cannot find in database')
-  //     return null;
-  //   }
-
-  //   return book;
-
-  // }
-  // catch (err) {
-  //   console.log('err trying fetch from database ', err)
-  //   throw Error(err)
-  // }
 }
 
 async function SearchBookOnline(title) {
@@ -289,7 +236,7 @@ function bookCardHtml(book) {
   const isUserBook = userBook(book) != null
   return `
     <button class="book-card" onclick="openModal(${book.id})">
-      <div class="book-cover" style="${book.cover_url ? `background-image: url('${book.cover_url}')` : ''}">
+      <div class="book-cover" style="${book.cover_url ? `background-image: url('${book.cover_url}')` : `background-color: ${coverColor(book.id)}` }">
         ${isUserBook ? userBook(book).status !== 'explore' ? '<span class="book-status-dot"></span>' : '' : ''}
         <span>${capitalize(book.title)}</span>
       </div>
@@ -332,52 +279,66 @@ function renderTabBar() {
   }).join("");
 }
 
-function renderSearchPanel(state, book = null){
+function renderSearchPanel(state, title = '', books = null){
 
-  const panel = document.querySelector('.search-result');
-  panel.classList.remove('hide-info')
+  //from container
+  document.querySelector('.search-result').classList.remove('hide-info')
+
+  const panel = document.getElementById('result');
+  const message = document.getElementById('message');
 
   if(state == 'idle')
   {
-   
-    panel.innerHTML = `
-    <button class="modal-close" onclick="closeSearchPanel()" aria-label="Close">
+   message.innerHTML = `<button class="modal-close close" onclick="closeSearchPanel()" aria-label="Close">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
     </button>
+    `
+    panel.innerHTML = `
     <div class="empty-state"><strong>Search</strong>Search Books by Titles</div>`
   }
   else if(state == 'loading')
   {
-    panel.innerHTML = `
-    <button class="modal-close" onclick="closeSearchPanel()" aria-label="Close">
+    message.innerHTML = `
+    <button class="modal-close close" onclick="closeSearchPanel()" aria-label="Close">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
     </button>
-    <div class="empty-state"><strong>Searching...</strong>Searching for ${book}</div>`
+    `
+    panel.innerHTML = `
+    <div class="empty-state"><strong>Searching...</strong>Searching for ${title}</div>`
   }
   else if(state == 'not found')
   {
-    panel.innerHTML = `
-    <button class="modal-close" onclick="closeSearchPanel()" aria-label="Close">
+    message.innerHTML = `
+    <p>Showing results for ${title} <span class="tab-count">${books.length}</span>  </p>
+    <button class="modal-close close" onclick="closeSearchPanel()" aria-label="Close">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
     </button>
-    <div class="empty-state"><strong>Hmm..</strong>No result found for ${book}</div>`
+    `
+    panel.innerHTML = `
+    <div class="empty-state"><strong>Hmm..</strong>No result found for ${title}</div>`
   }
   else if(state == 'error')
   {
-    panel.innerHTML = `
-    <button class="modal-close" onclick="closeSearchPanel()" aria-label="Close">
+    message.innerHTML = `
+    <p>Showing results for ${title} <span class="tab-count">${books.length}</span>  </p>
+    <button class="modal-close close" onclick="closeSearchPanel()" aria-label="Close">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
     </button>
+    `
+    panel.innerHTML = `
     <div class="empty-state"><strong>OOPS!</strong>Cannot Search for thr book</div>`
   }
   else if(state == 'found')
   {
-    //in this case, a valid book object
-    panel.innerHTML = `
-    <button class="modal-close" onclick="closeSearchPanel()" aria-label="Close">
+    message.innerHTML = `
+    <p>Showing results for ${title} <span class="tab-count">${books.length}</span>  </p>
+    <button class="modal-close close" onclick="closeSearchPanel()" aria-label="Close">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
     </button>
-    <div class="book-grid">${book.map(bookCardHtml).join("")}</div>
+    `
+    //in this case, a valid book object
+    panel.innerHTML = `
+    <div class="book-grid">${books.map(bookCardHtml).join("")}</div>
     `
   }
 }
@@ -617,8 +578,8 @@ async function loadUser() {
 
         <div class="search-input" id= "header-search">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-          <input class="input" id="input" ="search" placeholder="Search titles" />
-        </div>
+          <input class="input" id="input" type="search" placeholder="Search titles" />        
+          </div>
 
   <div id="user-info">
     <button class="profile-imgBtn" onclick="toggleInfo()" ></button>
@@ -688,7 +649,7 @@ function renderModal() {
     <button class="modal-close" onclick="closeModal()" aria-label="Close">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
     </button>
-    <div class="modal-cover" style="${book.cover_url ? `background-image: url('${book.cover_url}')` : ''}">
+    <div class="modal-cover" style="${book.cover_url ? `background-image: url('${book.cover_url}')` : `background-color: ${coverColor(book.id)}` }">
       <span>${capitalize(book.title)}</span>
     </div>
     <div class="modal-body">
@@ -731,13 +692,3 @@ function renderModal() {
 document.getElementById("modalOverlay").addEventListener("click", (e) => {
   if (e.target.id === "modalOverlay") closeModal();
 });
-
-
-(async () => {
-
-  await loadUser();
-  await loadBooks();
-  renderTabBar();
-  renderPanel();
-
-})();
