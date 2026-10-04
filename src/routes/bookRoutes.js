@@ -1,5 +1,5 @@
 import express from 'express'
-import db from '../db.js'
+//import db from '../db.js'
 import prisma from '../prismaClient.js'
 
 const router = express.Router()
@@ -29,9 +29,9 @@ router.post('/add', async(req, res)=>{
             data: {
                 title: title,
                 author: author,
-                cover_url: coverUrl,
+                coverUrl: coverUrl,
                 category: category,
-                rating: (Math.random() * 2 + 3).toFixed(1),
+                rating: parseFloat((Math.random() * 2 + 3).toFixed(1)),
                 desc: desc
             }
         })
@@ -102,8 +102,8 @@ router.post('/', async (req, res)=>{
 
     const createdBook = await prisma.userBook.create({
         data: {
-            user_id: req.user.id,
-            book_id: book_id,
+            userId: req.user.id,
+            bookId: book_id,
             status: status
         }
     });
@@ -119,7 +119,7 @@ router.get('/', async (req, res)=>{
     // `).all(req.user.id)
     const userBooks = await prisma.userBook.findMany({
         where: {
-            user_id: req.user.id
+            userId: req.user.id
         }
     })
 

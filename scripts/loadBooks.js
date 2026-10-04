@@ -1,5 +1,6 @@
 
-import db from '../src/db.js'
+//import db from '../src/db.js'
+import prisma from '../src/prismaClient.js'
 
 const rating = (Math.random() *2 + 3).toFixed(1)
 
@@ -11,10 +12,10 @@ const categories = [
     'romance'
 ];  
 
-const insertBook = db.prepare(`
-        INSERT INTO books (title, author, cover_url, category, rating, desc)
-        VALUES (?, ?, ?, ?, ?, ?)
-    `);
+// const insertBook = db.prepare(`
+//         INSERT INTO books (title, author, cover_url, category, rating, desc)
+//         VALUES (?, ?, ?, ?, ?, ?)
+//     `);
 
 
 for (const cat of categories) {
@@ -36,7 +37,17 @@ for (const cat of categories) {
             : null;
         const {category, desc} = await getMoreInfo(book.key)
 
-        insertBook.run(title, author, coverUrl, category, rating, desc);
+        //insertBook.run(title, author, coverUrl, category, rating, desc);
+        await prisma.book.create({
+            data: {
+                title: title,
+                author: author,
+                coverUrl: coverUrl,
+                category: category,
+                rating: parseFloat(rating),
+                desc: desc
+            }
+        })
     }
 
     console.log(`Books from ${cat} inserted successfully!`);

@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const {newBooksData, existingBooks} = CheckBooksInDatabase(books.docs)
         
         //add new books to database, existing books are render ready
-        if(newBooks.length > 0){
+        if(newBooksData.length > 0){
           console.log('found new books to add ', newBooksData)
 
           const newBooks = await AddNewBooks(newBooksData)
@@ -142,7 +142,7 @@ function CheckBooksInDatabase(onlineBooks) {
   })
 
   console.log('new books ', newBooks, ' exixting book ', existingBooks)
-  return {newBooks: newBooks, existingBooks: existingBooks};
+  return {newBooksData: newBooks, existingBooks: existingBooks};
 
 }
 
@@ -236,7 +236,7 @@ function bookCardHtml(book) {
   const isUserBook = userBook(book) != null
   return `
     <button class="book-card" onclick="openModal(${book.id})">
-      <div class="book-cover" style="${book.cover_url ? `background-image: url('${book.cover_url}')` : `background-color: ${coverColor(book.id)}` }">
+      <div class="book-cover" style="${book.coverUrl ? `background-image: url('${book.coverUrl}')` : `background-color: ${coverColor(book.id)}` }">
         ${isUserBook ? userBook(book).status !== 'explore' ? '<span class="book-status-dot"></span>' : '' : ''}
         <span>${capitalize(book.title)}</span>
       </div>
@@ -249,7 +249,7 @@ function bookCardHtml(book) {
 }
 
 function userBook(book) {
-  return user_books.find(b => b.book_id == book.id)
+  return user_books.find(b => b.bookId == book.id)
 }
 
 function renderTabBar() {
@@ -649,7 +649,7 @@ function renderModal() {
     <button class="modal-close" onclick="closeModal()" aria-label="Close">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
     </button>
-    <div class="modal-cover" style="${book.cover_url ? `background-image: url('${book.cover_url}')` : `background-color: ${coverColor(book.id)}` }">
+    <div class="modal-cover" style="${book.coverUrl ? `background-image: url('${book.coverUrl}')` : `background-color: ${coverColor(book.id)}` }">
       <span>${capitalize(book.title)}</span>
     </div>
     <div class="modal-body">
