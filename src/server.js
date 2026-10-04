@@ -27,5 +27,8 @@ app.use('/auth', authRoutes)
 app.use('/app', authMiddleware, appRoutes)
 app.use('/books', authMiddleware, bookRoutes)
 
-app.listen(PORT, ()=>{console.log('Server is active on ' + PORT)})
-
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log('Server is active on ' + PORT)
+    })
+}
