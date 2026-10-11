@@ -1,4 +1,4 @@
-# 📚 My-Shelf
+# My-Shelf
 
 **Your personal space for discovering, organizing, and tracking books.**
 
@@ -12,7 +12,7 @@ The project was built from scratch to explore full-stack development, REST APIs,
 
 ---
 
-## ✨ Features
+## Features
 
 - **User Authentication** — Register and log in securely using password hashing and JSON Web Tokens (JWT).
 - **Book Discovery** — Explore a collection of books stored in the database.
@@ -24,7 +24,7 @@ The project was built from scratch to explore full-stack development, REST APIs,
 - **Cloud Deployment** — Deploy the application using Vercel and Neon PostgreSQL.
 - **Docker Support** — Run the application and database in containers for a consistent development environment.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Technology | Purpose |
 |---|---|
@@ -41,7 +41,7 @@ The project was built from scratch to explore full-stack development, REST APIs,
 | Neon | Hosted PostgreSQL database |
 | Git & GitHub | Version control |
 
-## 🏗️ Architecture
+## Architecture
 
 My-Shelf follows a client-server architecture.
 
@@ -62,7 +62,7 @@ The application separates shared book information from individual users' reading
 
 This design allows multiple users to reference the same book without maintaining duplicate book records for each user's bookshelf.
 
-## 🔐 Authentication & Authorization
+## Authentication & Authorization
 
 The application uses JSON Web Tokens (JWT) to authenticate users.
 
@@ -71,13 +71,13 @@ The application uses JSON Web Tokens (JWT) to authenticate users.
 - Protected routes use authentication middleware to validate incoming tokens.
 - User-specific bookshelf operations are associated with the authenticated user's ID.
 
-## 🔎 Book Discovery
+## Book Discovery
 
 My-Shelf integrates with the [Open Library API](https://openlibrary.org/developers/api) to retrieve book information.
 
 Retrieved book data can be stored in the shared books database, allowing the application to reuse book records across users rather than creating a separate copy for every search.
 
-## 🚀 Getting Started
+## Getting Started
 
 Follow these steps to run My-Shelf locally.
 
@@ -115,7 +115,6 @@ JWT_SECRET="replace_with_a_secure_random_secret"
 
 Replace the database credentials with your local PostgreSQL configuration. Use a strong, private JWT secret.
 
-**Important:** Never commit your `.env` file or expose database credentials and authentication secrets publicly.
 
 ### 4. Set Up the Database
 
@@ -163,12 +162,8 @@ To stop the services:
 
 ```bash
 docker-compose down
+
 ```
-
-To stop the services without deleting persistent database data, avoid adding the `-v` flag.
-
-**Note:** When running the application inside Docker Compose, the database connection must use the database service hostname rather than `localhost`. Configure the database URL to match your Compose configuration.
-
 ## 🌍 Deployment
 
 The production application uses:
@@ -188,10 +183,13 @@ The main application structure includes:
 My-Shelf/
 ├── src/
 │   ├── server.js
+│   ├── prismaClient.js
 │   ├── routes/
 │   │   ├── authRoutes.js
 │   │   ├── appRoutes.js
 │   │   └── bookRoutes.js
+│   ├── middleware/
+│   │   ├── authMiddleware.js
 │   └── ...
 ├── public/
 │   ├── index.html
@@ -208,10 +206,8 @@ My-Shelf/
 ├── .gitignore
 ├── package.json
 └── README.md
+
 ```
-
-*The tree above summarizes the expected structure; filenames and directories may vary slightly with the current repository.*
-
 ## 📖 What I Learned
 
 Building My-Shelf helped me put several backend and full-stack development concepts into practice:
@@ -239,7 +235,7 @@ Potential improvements include:
 
 ## 👨‍💻 Author
 
-**Jinx Alam**
+**Hassan Alam**
 
 Computer Science student exploring full-stack development, backend engineering, and software architecture.
 
