@@ -148,7 +148,7 @@ http://localhost:5000
 
 The exact startup command depends on the scripts configured in `package.json`.
 
-## 🐳 Running with Docker
+## Running with Docker
 
 My-Shelf also supports a containerized environment using Docker Compose.
 
@@ -164,7 +164,7 @@ To stop the services:
 docker-compose down
 
 ```
-## 🌍 Deployment
+## Deployment
 
 The production application uses:
 
@@ -175,7 +175,7 @@ The production application uses:
 
 Production database credentials and JWT secrets should be configured through the hosting provider's environment variable settings, not committed to source control.
 
-## 📁 Project Structure
+## Project Structure
 
 The main application structure includes:
 
@@ -208,7 +208,7 @@ My-Shelf/
 └── README.md
 
 ```
-## 📖 What I Learned
+## What I Learned
 
 Building My-Shelf helped me put several backend and full-stack development concepts into practice:
 
@@ -222,7 +222,7 @@ Building My-Shelf helped me put several backend and full-stack development conce
 - Deploying a Node.js application and connecting it to a hosted PostgreSQL database.
 - Using Git and GitHub throughout the development process.
 
-## 🔮 Future Improvements
+## Future Improvements
 
 Potential improvements include:
 
@@ -233,7 +233,7 @@ Potential improvements include:
 - Automated tests for API endpoints and authentication.
 - Improved error handling, validation, and security.
 
-## 👨‍💻 Author
+## Author
 
 **Hassan Alam**
 
